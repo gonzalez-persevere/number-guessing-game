@@ -29,7 +29,7 @@ function handleGuess(e) {
     e.preventDefault();
 
     // Get the user's guess from the input field
-    const guessInput = document.getElementById('guessInput');
+    const guessInput = document.getElementById('guess');
     const guess = guessInput.value.trim();
 
     // Check if the input is empty
@@ -67,7 +67,8 @@ function handleGuess(e) {
 // Function to reset the game
 function resetGame() {
     // Clear the input field and start a new game
-    document.getElementById('guessInput').value = '';
+    document.getElementById('guess').value = '';
+    displayMessage(''); // Clear any messages
     startGame();
 }
 
@@ -79,6 +80,9 @@ if (typeof window !== 'undefined') {
         startGame();
     };
 }
+
+// Attach functions to the window object
+window.resetGame = resetGame;  // Makes resetGame available globally
 
 // Export functions for testing
 export { startGame, checkGuess, displayMessage, handleGuess, resetGame };
