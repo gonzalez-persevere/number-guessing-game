@@ -1,88 +1,77 @@
-// Variable to store the random number
 let randomNumber;
+let gameActive = true;
 
-// Function to start the game
-function startGame() {
-    // Generate a random number between 1 and 100
-    randomNumber = Math.floor(Math.random() * 100) + 1;
-    displayMessage('I\'m thinking of a number between 1 and 100. Can you guess it?');
+export function startGame() {
+    randomNumber = Math.floor(Math.random() * 100) + 1; // Generate random number between 1 and 100
+    displayMessage("I'm thinking of a number between 1 and 100. Can you guess it?");
+    gameActive = true; // Reset game state
 }
 
-// Function to check the user's guess
-function checkGuess(guess) {
+export function checkGuess(guess) {
     if (guess < randomNumber) {
         return 'Too low! Try again.';
     } else if (guess > randomNumber) {
         return 'Too high! Try again.';
     } else {
+        gameActive = false; // Mark game as inactive
         return 'Congratulations! You guessed the number!';
     }
 }
 
-// Function to display messages in the game interface
-function displayMessage(message) {
+export function displayMessage(message) {
     document.getElementById('message').textContent = message;
 }
 
-// Function to handle user's guess submission
-function handleGuess(e) {
-    e.preventDefault();
+console.log(document.getElementById('guessInput'));
+// Handle form submission
+export function handleGuess(event) {
+    event.preventDefault(); // Prevent form submission
 
-    // Get the user's guess from the input field
-    const guessInput = document.getElementById('guess');
-    const guess = guessInput.value.trim();
+    const guessInput = document.querySelector('#guessInput').value;
 
-    // Check if the input is empty
-    if (!guess) {
-        displayMessage('Please enter a number.');
-        return;
+
+    try {
+        // Validate guess
+        if (!guessInput) {
+            displayMessage('Please enter a number.');
+            return;
+        }
+
+        // Check for non-numeric input
+        const guessNumber = parseFloat(guessInput);
+        
+        if (isNaN(guessNumber) || !Number.isInteger(guessNumber)) {
+            displayMessage('Please enter a valid integer number.');
+            return;
+        }
+
+        // Check if guess is out of range
+        if (guessNumber < 1 || guessNumber > 100) {
+            displayMessage('Please enter a number between 1 and 100.');
+            return;
+        }
+
+        // Check the guess and display message
+        const feedback = checkGuess(guessNumber);
+        displayMessage(feedback);
+        
+        // Clear input field for next guess
+        guessInput.value = '';
+
+        // If the game is over, provide option to restart
+        if (!gameActive) {
+            displayMessage('Press the button to start a new game.');
+        }
+    } catch (error) {
+        displayMessage('An error occurred. Please try again.');
     }
-
-    // Check if the input is a number
-    const numberGuess = Number(guess);
-    if (isNaN(numberGuess)) {
-        displayMessage('Please enter a number.');
-        return;
-    }
-
-    // Check if the input is a whole number
-    if (!Number.isInteger(numberGuess)) {
-        displayMessage('Please enter a whole number.');
-        return;
-    }
-
-    // Check if the input is within the valid range
-    if (numberGuess < 1 || numberGuess > 100) {
-        displayMessage('Please enter a number between 1 and 100.');
-        return;
-    }
-
-    // If the guess is valid, display the result
-    displayMessage(checkGuess(numberGuess));
-
-    // Clear the input field after the guess
-    guessInput.value = '';
 }
 
-// Function to reset the game
-function resetGame() {
-    // Clear the input field and start a new game
-    document.getElementById('guess').value = '';
-    displayMessage(''); // Clear any messages
-    startGame();
-}
-
-// Event listener for form submission
-if (typeof window !== 'undefined') {
-    window.onload = function () {
-        const form = document.getElementById('guessForm');
-        form.addEventListener('submit', handleGuess);
-        startGame();
-    };
-}
-
-// Attach functions to the window object
-window.resetGame = resetGame;  // Makes resetGame available globally
+// Set up event listener when the window loads
+window.onload = () => {
+    document.getElementById('guessForm').addEventListener('submit', handleGuess);
+    startGame(); // Start the game on page load
+};
 
 // Export functions for testing
-export { startGame, checkGuess, displayMessage, handleGuess, resetGame };
+export { startGame, checkGuess, displayMessage, handleGuess };
