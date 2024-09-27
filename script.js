@@ -22,13 +22,19 @@ export function displayMessage(message) {
     document.getElementById('message').textContent = message;
 }
 
-console.log(document.getElementById('guessInput'));
+export function resetGame() {
+    // Reset game logic
+    document.getElementById('guessInput').value = '';
+    displayMessage("I'm thinking of a number between 1 and 100. Can you guess it?");
+    startGame();
+}
+
+
 // Handle form submission
 export function handleGuess(event) {
     event.preventDefault(); // Prevent form submission
 
     const guessInput = document.querySelector('#guessInput').value;
-
 
     try {
         // Validate guess
@@ -39,7 +45,7 @@ export function handleGuess(event) {
 
         // Check for non-numeric input
         const guessNumber = parseFloat(guessInput);
-        
+
         if (isNaN(guessNumber) || !Number.isInteger(guessNumber)) {
             displayMessage('Please enter a valid integer number.');
             return;
@@ -54,9 +60,9 @@ export function handleGuess(event) {
         // Check the guess and display message
         const feedback = checkGuess(guessNumber);
         displayMessage(feedback);
-        
+
         // Clear input field for next guess
-        guessInput.value = '';
+        document.querySelector('#guessInput').value = '';
 
         // If the game is over, provide option to restart
         if (!gameActive) {
@@ -72,6 +78,3 @@ window.onload = () => {
     document.getElementById('guessForm').addEventListener('submit', handleGuess);
     startGame(); // Start the game on page load
 };
-
-// Export functions for testing
-export { startGame, checkGuess, displayMessage, handleGuess };

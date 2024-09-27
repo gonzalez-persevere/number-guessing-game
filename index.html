@@ -11,12 +11,16 @@
         <h1>Number Guessing Game</h1>
         <div id="message"></div>
         <form id="guessForm">
-            <input type="number" name="guess" id="guess" placeholder="Enter your guess" required>
+            <input type="number" name="guess" id="guessInput" placeholder="Enter your guess" required>
             <button type="submit">Submit Guess</button>
            
-            <button type="button" class="bg-yellowgreen" id="resetButton" onclick="resetGame()">Try Again</button>
+            <button type="button" class="bg-yellowgreen" id="resetButton">Try Again</button>
         </form>
     </div>
     <script type="module" src="./script.js"></script>
+    <script type="module">
+        import { resetGame } from './script.js';
+        document.getElementById('resetButton').addEventListener('click', resetGame);
+    </script>
 </body>
 </html>
